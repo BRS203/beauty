@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beauty Pielęgnacja — plan twarzy i masaż jadeitowy</title>
+  <meta name="description" content="Kompletny plan pielęgnacji twarzy (rano, wieczór, dodatki), plan tygodnia, masaż jadeitowy krok po kroku oraz checklisty — wszystko w jednym miejscu.">
+  <link rel="icon" href="favicon.ico"><!-- TODO: favicon -->
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Beauty Pielęgnacja — plan twarzy i masaż jadeitowy">
+  <meta property="og:description" content="Rano, wieczór, dodatki, plan tygodnia i masaż jadeitowy — gotowe do wdrożenia.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/og-image.jpg"><!-- TODO: og-image -->
+  <meta property="og:locale" content="pl_PL">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Beauty Pielęgnacja — plan twarzy i masaż jadeitowy">
+  <meta name="twitter:description" content="Kompletny plan pielęgnacji i masaż jadeitowy prosto z PDF.">
+  <meta name="twitter:image" content="images/og-image.jpg">
+
+  <!-- Structured data (Person) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"Amanda",
+    "description":"Indywidualne plany pielęgnacji skóry twarzy",
+    "url":"", 
+    "image":"images/og-image.jpg",
+    "email":"amanda@example.com",
+    "telephone":"+48 123 456 789"
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Eleganckie nagłówki + bardzo czytelny tekst -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN (konfiguracja przed skryptem) -->
+  <script>
+    window.tailwind = window.tailwind || {};
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors:{
+            primary: '#e11d48',   /* rose-600 */
+            primaryLight: '#fda4af', /* rose-300 */
+            primarySoft: '#ffe1ec'
+          },
+          fontFamily:{
+            sans:['DM Sans','system-ui','-apple-system','Segoe UI','Roboto','Ubuntu','Cantarell','Noto Sans','sans-serif'],
+            display:['Playfair Display','Georgia','serif']
+          },
+          boxShadow:{
+            soft:'0 10px 30px rgba(225,29,72,.15)'
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Krytyczne drobiazgi -->
+  <style>
+    :focus-visible{ outline: 3px solid #e11d48; outline-offset: 2px; }
+    html{ scroll-behavior:smooth; }
+
+ /* ▼▼▼ JEDYNA ZMIANA: tło strony z podanej grafiki ▼▼▼ */
+    /* TODO: jeśli trzymasz obraz w /images, zmień url('tlo.png') na url('images/tlo.png') */
+    body{
+      background-image: url('tlo.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    @media (max-width: 768px){
+      /* na mobile bez przyklejania, lepsza płynność przewijania */
+      body{ background-attachment: scroll; background-position: center; }
+    }
+    /* ▲▲▲ KONIEC ZMIANY – reszta bez zmian ▲▲▲ */
+
+    /* Różowy, lekki "glow" bez obrazów */
+    .blob{ filter: blur(48px); opacity:.35 }
+    .tab-btn[aria-selected="true"]{ background: #fff0f4; color:#e11d48; border-color:#fecdd3 }
+  </style>
+
+  <!-- TODO: GA/GTM -->
+  <!-- <script>/* wklej kod analityki */</script> -->
+</head>
+<body class="font-sans text-gray-900 antialiased">
+
+  <!-- HERO (bez nawigacji) -->
+  <section id="home" class="relative min-h-[64vh] overflow-hidden pink-bg">
+    <!-- miękkie blobki -->
+    <div class="pointer-events-none absolute -top-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primaryLight blob"></div>
+    <div class="pointer-events-none absolute -bottom-28 -right-16 w-[30rem] h-[30rem] rounded-full bg-primary blob"></div>
+
+    <div class="max-w-3xl mx-auto px-6 py-16 text-center">
+    <img src="pielegnacja.png" alt="Pielegnacja Beauty" loading="lazy" class="mx-auto mb-auto h-auto">
+      <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
+ <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
+        <a href="#" data-open="plan" class="px-6 py-3 rounded-xl border border-rose-300 txt-primary hover:bg-rose-400 shadow-soft transition">  <img src="otworz.png" alt="Plan" loading="lazy" class="mx-auto mb-auto h-auto"></a>
+        <a href="#" data-open="week" class="px-6 py-3 rounded-xl border border-rose-300 text-primary hover:bg-rose-400">  <img src="plan.png" alt="Plan" loading="lazy" class="mx-auto mb-auto h-auto"></a>
+        <a href="#" data-open="jade" class="px-6 py-3 rounded-xl border border-rose-300 txt-primary hover:bg-rose-400"><img src="masaz.png" alt="Plan" loading="lazy" class="mx-auto mb-auto h-auto"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MODALE (treść z PDF) ===== -->
+
+  <!-- PLAN: RANO / NOC / DODATKI + PRO TIPY + SOS + CHECKLISTA -->
+  <dialog id="dlg-plan" class="w-[min(100vw,960px)] rounded-2xl p-0">
+    <form method="dialog" class="sticky top-0 flex justify-between items-center px-5 py-3 bg-white border-b">
+      <h3 class="text-xl font-bold">Plan pielęgnacji twarzy + masaż jadeitowy</h3>
+      <button aria-label="Zamknij" class="text-2xl leading-none px-2 hover:text-primary">&times;</button>
+    </form>
+
+    <div class="px-5 py-4 grid gap-6">
+      <!-- Zakładki -->
+      <div class="grid sm:grid-cols-3 gap-3">
+        <button class="tab-btn border rounded-xl p-3 hover:bg-rose-50" data-tab="day" aria-selected="true">
+          <img src="dzien.png" alt="Dzien" loading="lazy" class="mx-auto mb-auto h-auto">
+        </button>
+        <button class="tab-btn border rounded-xl p-3 hover:bg-rose-50" data-tab="night">
+          <img src="noc.png" alt="Noc" loading="lazy" class="mx-auto mb-auto h-auto">
+        </button>
+        <button class="tab-btn border rounded-xl p-3 hover:bg-rose-50" data-tab="extras">
+          <img src="dodatki.png" alt="Dodatki" loading="lazy" class="mx-auto mb-auto h-auto">
+        </button>
+      </div>
+
+      <!-- DZIEŃ -->
+      <div id="tab-day" class="tab-pane">
+        <h4 class="text-lg font-bold mb-2">RANO — pełna rutyna</h4>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><strong>Oczyszczanie:</strong> BENTON Green Tea Foam – ziarenko grochu, 30–40 s. Spłucz letnią wodą. (Rano przy komforcie możesz pominąć i przejść od razu do toniku.)</li>
+          <li><strong>Tonik:</strong> Pyunkang Yul Essence Toner – 1–2 warstwy dłońmi. Przy ściągnięciu możesz zrobić 3 warstwy metodą „7-skins light”.</li>
+          <li><strong>Antyoksydant:</strong> SKIN79 Shine Yuja C Ampoule – 3–4 krople na suchą skórę. Jeśli szczypie, połóż najpierw cienką warstwę toniku i na to wit. C.</li>
+          <li><strong>Naprawa bariery:</strong> BENTON Snail Bee Essence – 1–2 pompki. Niacynamid + śluz wspierają nawilżenie i równowagę T-strefy.</li>
+          <li><strong>Krem:</strong> SKIN79 Water Biome Hydra Day – cienka, ale „mokro wyglądająca” warstwa (nawet 2 warstwy na policzki).</li>
+          <li><strong>SPF:</strong> SKIN79 Waterproof Sun Gel SPF50+ PA++++ – 2 paski na palcach; szyja i uszy też. Reaplikacja co 2–3 h na słońcu.</li>
+        </ol>
+        <p class="mt-2 text-sm text-gray-700"><em>Opcjonalnie:</em> masaż lodowy – po toniku/serum, 1–2 min na partię, krótkimi ruchami.</p>
+      </div>
+
+      <!-- NOC -->
+      <div id="tab-night" class="tab-pane hidden">
+        <h4 class="text-lg font-bold mb-2">WIECZÓR — pełna rutyna</h4>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><strong>Demakijaż/SPF:</strong> Yoskine olejkowe mleczko lub SKIN79 Coconut Oil – masuj 60 s, zwilż dłonie (emulgacja), dokładnie spłucz.</li>
+          <li><strong>Domycie:</strong> BENTON Green Tea Foam – 20–30 s, aby usunąć resztki emolientów.</li>
+          <li><strong>Tonik:</strong> Pyunkang Yul Essence Toner – 1–2 warstwy (na policzki możesz więcej).</li>
+          <li><strong>Esencja:</strong> BENTON Snail Bee Essence – 1–2 pompki, dociskaj dłońmi.</li>
+          <li><strong>Serum peptydowe:</strong> MIZON 7 Vegan Peptide Booster – 3–4 pompki na twarz, szyję i dekolt.</li>
+          <li><strong>Krem:</strong> SKIN79 Golden Snail Intensive (policzki/suchość) lub Water Biome/Smooto (T-strefa/lżej).</li>
+          <li><strong>Roller jadeitowy:</strong> 7 minut zgodnie z instrukcją; w dni zabiegane 3 min (wersja skrócona).</li>
+        </ol>
+      </div>
+
+      <!-- DODATKI + TIPY + SOS + CHECKLISTA -->
+      <div id="tab-extras" class="tab-pane hidden">
+        <h4 class="text-lg font-bold mb-2">DODATKI — kiedy i jak</h4>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Mikrodermabrazja Yoskine:</strong> co 10–14 dni, delikatnie, nie na zaczerwienienia; nie łącz tego samego dnia z wit. C ani peelingiem enzymatycznym.</li>
+          <li><strong>Maska kojąca:</strong> Smooto Aloe-E Snail Gel – po słońcu/irytacji 10–15 min lub bardzo cienko jako „sleeping mask”.</li>
+          <li><strong>Masażer lodowy:</strong> rano lub po słońcu; nie na suchą skórę, unikaj bezpośrednio po peelingach.</li>
+        </ul>
+
+        <div class="mt-6 grid gap-6 md:grid-cols-2">
+          <div>
+            <h5 class="font-semibold">Peeling enzymatyczny (Tołpa – papaina &amp; bromelaina)</h5>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+              <li><strong>Częstotliwość:</strong> 1×/tydz. (docelowo 2× jeśli bez podrażnień).</li>
+              <li><strong>Kiedy:</strong> wieczorem po myciu i toniku, przed esencją i kremem.</li>
+              <li><strong>Jak:</strong> cienka warstwa na suchą skórę 5–10 min; zmyj letnią wodą.</li>
+              <li><strong>Nie łącz</strong> tego samego dnia z mikrodermabrazją ani z mocną wit. C.</li>
+              <li><strong>Skóra wrażliwa/naczynkowa:</strong> 3–5 min i rzadziej.</li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="font-semibold">Masaż lodowy — kiedy i jak</h5>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+              <li>Najlepszy rano po oczyszczaniu i toniku/serum; 1–2 min na partię krótkimi ruchami.</li>
+              <li>Nie przykładaj gołego lodu do suchej skóry — masaż po warstwie kosmetyku lub przez cienką ściereczkę.</li>
+              <li>Unikaj bezpośrednio po peelingach i przy bardzo reaktywnych naczynkach.</li>
+              <li>Po masażu: krem + SPF (rano) albo krem (wieczorem).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-6 grid gap-6 md:grid-cols-2">
+          <div>
+            <h5 class="font-semibold">PRO TIPY &amp; WSKAZÓWKI</h5>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+              <li>Warstwuj „mokre na mokre”: tonik → serum → esencja → krem → SPF; każdej warstwie daj 30–60 s.</li>
+              <li>SPF: 2 paski; reaplikacja co 2–3 h. W pochmurny dzień nadal 1 pełna aplikacja rano.</li>
+              <li>W dniach wrażliwych zrezygnuj z wit. C; trzymaj się Pyunkang Yul + Snail + krem.</li>
+              <li>Higiena: szpatułka do słoiczków; ręcznik tylko do twarzy; poszewka zmiana co tydzień.</li>
+              <li>Patch-test nowości: za uchem / linia żuchwy przez 48 h.</li>
+              <li>Gua sha/roller zawsze na poślizgu (serum/krem), ruchy od środka twarzy ku skroniom/uszom.</li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="font-semibold">PROTOKOŁY SOS</h5>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+              <li><strong>Podrażnienie:</strong> przerwa od aktywnych; Pyunkang Yul → Snail → bogatszy krem; Smooto 10 min.</li>
+              <li><strong>Krostka:</strong> plaster hydrokoloidowy na noc; 24–48 h bez wit. C i peelingów.</li>
+              <li><strong>Po słońcu:</strong> chłodny roller/masażer, maska Smooto, następnego dnia pilnuj SPF.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <h5 class="font-semibold">CHECKLISTA DZIENNA (odhaczaj)</h5>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>RANO:</strong></li>
+              <li>Oczyszczanie</li><li>Tonik (1–2 warstwy)</li><li>Witamina C</li><li>Snail (Benton)</li><li>Krem nawilżający</li><li>SPF (2 paski)</li><li>Reaplikacja SPF</li><li>Masaż lodowy (opcjonalnie)</li>
+            </ul>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>WIECZÓR:</strong></li>
+              <li>Demakijaż</li><li>Żel/mycie</li><li>Tonik</li><li>Snail (Benton)</li><li>Peptydy (Mizon)</li><li>Krem nocny</li><li>Roller/Gua sha 3–7 min</li>
+              <li class="mt-2"><strong>DODATKI:</strong> Maska Smooto; Peeling 1–2×/tydz.; Mikrodermabrazja co 10–14 dni; 1,5–2 l wody; Ręcznik osobno; Poszewka raz/tydz.; Sen 7–8 h.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- PLAN TYGODNIA -->
+  <dialog id="dlg-week" class="w-[min(100vw,760px)] rounded-2xl p-0">
+<img src="plan.png" alt="Plan" loading="lazy" class="mx-auto mb-auto h-auto">
+    <form method="dialog" class="sticky top-0 flex justify-between items-center px-5 py-3 bg-white border-b">
+      <button aria-label="Zamknij" class="text-2xl leading-none px-2 hover:text-primary">&times;</button>
+    </form>
+    <div class="px-5 py-4 grid gap-3 text-gray-800">
+      <ul class="space-y-1">
+        <li><strong>Pon:</strong> Pełna rutyna • Rano masaż lodowy • Wieczór roller 7 min</li>
+        <li><strong>Wt:</strong> Pełna rutyna • Bez masażu</li>
+        <li><strong>Śr:</strong> Pełna rutyna • Roller 3 min (drenaż)</li>
+        <li><strong>Czw:</strong> Pełna rutyna • Bez masażu</li>
+        <li><strong>Pt:</strong> Pełna rutyna • Roller 7 min</li>
+        <li><strong>Sob:</strong> Maska Smooto 10–15 min • (Peeling enzymatyczny jeśli dzień peelingowy)</li>
+        <li><strong>Nd:</strong> Pełna rutyna • Relaks (bez peelingu)</li>
+      </ul>
+      <p class="mt-2 text-sm text-gray-600"><strong>Co 10–14 dni:</strong> Mikrodermabrazja Yoskine – bardzo delikatnie; nie łączyć z peelingiem enzymatycznym.</p>
+    </div>
+  </dialog>
+
+  <!-- MASAŻ JADEITOWY -->
+  <dialog id="dlg-jade" class="w-[min(100vw,860px)] rounded-2xl p-0">
+    <form method="dialog" class="sticky top-0 flex justify-between items-center px-5 py-3 bg-white border-b">
+      <h3 class="text-xl font-bold">Masaż jadeitowy — instrukcja (7 minut)</h3>
+      <button aria-label="Zamknij" class="text-2xl leading-none px-2 hover:text-primary">&times;</button>
+    </form>
+    <div class="px-5 py-4 grid gap-6">
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Otwarcie limfy (1 min):</strong> Dłonie: rozmasuj obojczyki. Roller: od podbródka w dół po bokach szyi do obojczyków.</li>
+        <li><strong>Szyja i kark (1 min):</strong> Roller od dołu szyi do żuchwy (lifting). Z tyłu karku ruchy w dół, by odprowadzić napięcia.</li>
+        <li><strong>Żuchwa i podbródek (1 min):</strong> Od środka brody do kąta żuchwy; zatrzymaj 3–5 s w punkcie ST6.</li>
+        <li><strong>Policzki (1 min):</strong> Od skrzydełek nosa pod kością policzkową do skroni; zatrzymaj w SI18.</li>
+        <li><strong>Okolice oczu (1 min):</strong> Mały wałek: od wewnętrznego kącika do skroni; na górze po łuku brwiowym do skroni.</li>
+        <li><strong>Czoło i lifting brwi (1 min):</strong> Od środka czoła do skroni; pionowo od brwi do linii włosów; zatrzymaj w Yin Tang 5–10 s.</li>
+        <li><strong>Zamykanie przepływu (1 min):</strong> Od środka twarzy po bokach szyi w dół do obojczyków.</li>
+      </ol>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-semibold">Punkty akupresury</h4>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+            <li><strong>Yin Tang (między brwiami):</strong> „Spokojny umysł”; uspokaja i rozluźnia czoło. Ucisk 5–10 s, 2–3 powtórzenia.</li>
+            <li><strong>BL2 — nasady brwi:</strong> Zmniejsza obrzęki wokół oczu, łagodzi napięcie czoła. Ucisk 5 s.</li>
+            <li><strong>SI18 — policzek:</strong> Poprawia krążenie policzków, wspiera drenaż – zatrzymaj 3–5 s.</li>
+            <li><strong>ST6 — żuchwa:</strong> Rozluźnia żwacze, pomaga przy bruksizmie, poprawia owal. Ucisk 3–5 s.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold">Jak uciskać</h4>
+          <p class="text-sm text-gray-700 mt-2">Opuszkiem palca lub małym końcem rollera; nacisk średni, zawsze na poślizgu.</p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Skrypty -->
+  <script>
+    // CTA -> dialog
+    const dlgPlan = document.getElementById('dlg-plan');
+    const dlgWeek = document.getElementById('dlg-week');
+    const dlgJade = document.getElementById('dlg-jade');
+    document.querySelectorAll('[data-open]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const t=btn.dataset.open;
+        ({plan:dlgPlan, week:dlgWeek, jade:dlgJade}[t])?.showModal();
+      });
+    });
+
+    // Zakładki w PLANIE
+    const tabBtns = document.querySelectorAll('#dlg-plan .tab-btn');
+    const panes = {
+      day: document.getElementById('tab-day'),
+      night: document.getElementById('tab-night'),
+      extras: document.getElementById('tab-extras')
+    };
+    tabBtns.forEach(b=>{
+      b.addEventListener('click', ()=>{
+        tabBtns.forEach(x=>x.setAttribute('aria-selected','false'));
+        b.setAttribute('aria-selected','true');
+        const t=b.dataset.tab;
+        Object.keys(panes).forEach(k=> panes[k].classList.toggle('hidden', k!==t));
+      });
+    });
+
+    // Rok w stopce
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
